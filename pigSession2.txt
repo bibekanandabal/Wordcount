@@ -1,0 +1,58 @@
+001,Rajiv,Reddy,21,9848022337,Hyderabad,89
+002,siddarth,Battacharya,22,9848022338,Kolkata,78 
+003,Rajesh,Khanna,22,9848022339,Delhi,90 
+004,Preethi,Agarwal,21,9848022330,Pune,93 
+005,Trupthi,Mohanthy,23,9848022336,Bhuwaneshwar,75 
+006,Archana,Mishra,23,9848022335,Chennai,87 
+007,Komal,Nayak,24,9848022334,trivendram,83 
+008,Bharathi,Nambiayar,24,9848022333,Chennai,72
+
+concat
+------
+student_name_concat = foreach student_details Generate CONCAT (firstname, lastname);
+
+
+Tokenize
+-------
+student_name_tokenize = foreach student_details  Generate TOKENIZE(name);
+
+sum
+----
+student_workpages_sum = foreach employee_group Generate 
+   (employee_data.name,employee_data.daily_typing_pages),SUM(employee_data.daily_typing_pages);
+
+min
+---
+student_gpa_min = foreach student_group_all  Generate
+   (student_details.firstname, student_details.gpa), MIN(student_details.gpa);
+
+max
+---
+student_gpa_min = foreach student_group_all  Generate
+   (student_details.firstname, student_details.gpa), MAX(student_details.gpa);
+
+limit
+----
+limit_data = LIMIT student_details 4; 
+
+store
+----
+STORE student INTO ' home/acadgild/pig/pig_Output/ ' USING PigStorage (',');
+
+distinct
+-------
+distinct_data = DISTINCT student_details;
+
+flatten
+------
+A = LOAD 'data';
+
+B = GROUP A BY $1;
+
+C = FOREACH B FLATTEN(A);
+
+isempty
+--------
+isempty_data = filter cogroup_data by IsEmpty(emp_sales);
+
+D = STREAM C THROUGH 'stream.pl';
